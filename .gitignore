@@ -1,0 +1,479 @@
+# =============================================================================
+# Gitignore global multi-stack
+# Foco: segredos, arquivos locais, caches, builds e artefatos gerados.
+#
+# =============================================================================
+
+
+# =============================================================================
+# Segredos e configuracoes locais
+# =============================================================================
+.env
+.env.*
+!.env.example
+!.env.example.*
+!.env.sample
+!.env.template
+
+.envrc.local
+*.local
+*.local.*
+!.env.local.example
+
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.csr
+*.jks
+*.keystore
+*.mobileprovision
+*.provisionprofile
+
+secrets/
+secret/
+credentials/
+.secrets/
+.credentials/
+*.credentials
+*_credentials*
+*_secret*
+*_secrets*
+*secret*.json
+*credentials*.json
+*service-account*.json
+*service_account*.json
+firebase-adminsdk*.json
+application_default_credentials.json
+
+.netrc
+.npmrc.local
+.yarnrc.local
+
+# SSH
+id_rsa
+id_rsa.pub
+id_dsa
+id_dsa.pub
+id_ecdsa
+id_ecdsa.pub
+id_ed25519
+id_ed25519.pub
+known_hosts
+
+# Cloud e infraestrutura
+.aws/
+.azure/
+.gcloud/
+.kube/
+aws-credentials
+credentials
+kubeconfig
+.terraform/
+.terraform.lock.hcl.local
+terraform.tfstate
+terraform.tfstate.*
+*.tfvars
+*.tfvars.json
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.vault_pass
+.vault-password
+vault-password.txt
+*.vault
+
+
+# =============================================================================
+# IA, agentes e automacoes locais
+# =============================================================================
+.codex/
+.claude/
+.aider*
+.continue/
+.cursor/
+.superpowers/
+.superpowers
+.playwright-mcp/
+.playwright-mcp
+.mcp.json
+.mcp.*.json
+*.ai-context
+*.superpowers
+*.playwright-mcp
+sessions/
+CLAUDE.local.md
+AGENTS.local.md
+
+
+# =============================================================================
+# Sistema operacional
+# =============================================================================
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+
+# =============================================================================
+# Editores e IDEs
+# =============================================================================
+# VS Code: ignora o que for local, permite arquivos comuns de projeto.
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# JetBrains / Android Studio
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.rsuser
+*.vsidx
+
+# Eclipse / NetBeans
+.classpath
+.project
+.settings/
+nbproject/private/
+nbbuild/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# Vim / Emacs
+*.vim
+.*.swp
+\#*\#
+.\#*
+
+
+# =============================================================================
+# Temporarios, logs e diagnosticos
+# =============================================================================
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*.orig
+*.rej
+*.swp
+*.swo
+*.log
+*.pid
+*.pid.lock
+*.seed
+logs/
+log/
+*.stackdump
+hs_err_pid*
+replay_pid*
+
+
+# =============================================================================
+# JavaScript / TypeScript / Node.js
+# =============================================================================
+node_modules/
+.pnp.*
+.pnp.loader.mjs
+.pnpm-store/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+.next/
+.nuxt/
+.output/
+.svelte-kit/
+.angular/cache/
+.astro/
+.vite/
+.vitepress/cache/
+.turbo/
+.parcel-cache/
+.cache/
+public/.cache/
+.eslintcache
+.stylelintcache
+
+dist/
+build/
+out/
+coverage/
+.nyc_output/
+*.lcov
+storybook-static/
+
+*.tsbuildinfo
+vite.config.ts.timestamp-*
+vite.config.js.timestamp-*
+
+*.tgz
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+.vercel/
+.netlify/
+.wrangler/
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+.vscode-test/
+playwright-report/
+test-results/
+
+
+# =============================================================================
+# Python
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.virtualenv/
+.pyenv/
+.tox/
+.nox/
+
+*.egg
+*.egg-info/
+.eggs/
+wheels/
+*.whl
+MANIFEST
+
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+nosetests.xml
+
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyright/
+.ruff_cache/
+
+
+# =============================================================================
+# Java / Kotlin / Gradle / Maven
+# =============================================================================
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.sar
+!gradle-wrapper.jar
+!**/gradle-wrapper.jar
+
+target/
+.gradle/
+gradle-app.setting
+
+
+# =============================================================================
+# .NET / C#
+# =============================================================================
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Ll]og/
+[Ll]ogs/
+artifacts/
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+.nuget/
+packages/
+_ReSharper*/
+*.DotSettings.user
+.localhistory/
+.vshistory/
+
+
+# =============================================================================
+# C / C++
+# =============================================================================
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.make
+*.d
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+
+# =============================================================================
+# Flutter / Dart / mobile
+# =============================================================================
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+flutter_*.png
+linked_*.ds
+unlinked.ds
+unlinked_spec.ds
+
+local.properties
+**/android/local.properties
+**/android/.gradle/
+**/android/captures/
+
+**/ios/.symlinks/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/engine
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+
+lib/generated_plugin_registrant.dart
+DerivedData/
+*.xcuserstate
+
+
+# =============================================================================
+# Bancos de dados e dumps locais
+# =============================================================================
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+*.db3
+*.db3-*
+*.sqlite-journal
+*.sql.gz
+*.sql.zip
+dump.sql
+*.dump
+migrations_backup/
+data/
+
+
+# =============================================================================
+# Docker e containers
+# =============================================================================
+docker-compose.override.yml
+docker-compose.local.yml
+.docker/
+*.dockerenv
+docker-volumes/
+
+
+# =============================================================================
+# Arquivos comprimidos e binarios gerados
+# =============================================================================
+*.7z
+*.gz
+*.bz2
+*.xz
+*.zip
+*.rar
+*.tar
+*.tgz
+
+**/.claude/settings.local.json

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Solar — CSS Universe</title>
+    <meta name="description" content="Sistema Solar interativo em CSS puro com céu estelar imersivo, estrelas cadentes, nebulosas e animações 3D realistas.">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- STATE INPUTS -->
+    <input type="checkbox" id="star-mode" class="hidden-input">
+    <input type="radio" name="planet-focus" id="focus-none" class="hidden-input" checked>
+    <input type="radio" name="planet-focus" id="focus-mercury" class="hidden-input">
+    <input type="radio" name="planet-focus" id="focus-venus" class="hidden-input">
+    <input type="radio" name="planet-focus" id="focus-earth" class="hidden-input">
+    <input type="radio" name="planet-focus" id="focus-mars" class="hidden-input">
+    <input type="radio" name="planet-focus" id="focus-jupiter" class="hidden-input">
+    <input type="radio" name="planet-focus" id="focus-saturn" class="hidden-input">
+    <input type="radio" name="speed" id="speed-slow" class="hidden-input">
+    <input type="radio" name="speed" id="speed-normal" class="hidden-input" checked>
+    <input type="radio" name="speed" id="speed-fast" class="hidden-input">
+
+    <!-- DEEP SPACE BACKGROUNDS -->
+    <div class="void-bg"></div>
+    <div class="nebula-layer"></div>
+    <div class="stars-bg"></div>
+    <div class="stars-layer-1"></div>
+    <div class="stars-layer-2"></div>
+    <div class="star-glows"></div>
+
+    <!-- SHOOTING STARS -->
+    <div class="shooting-star shooting-star-1"></div>
+    <div class="shooting-star shooting-star-2"></div>
+    <div class="shooting-star shooting-star-3"></div>
+
+    <!-- COSMIC DUST PARTICLES -->
+    <div class="cosmic-dust">
+        <div class="dust-particle dust-1"></div>
+        <div class="dust-particle dust-2"></div>
+        <div class="dust-particle dust-3"></div>
+        <div class="dust-particle dust-4"></div>
+        <div class="dust-particle dust-5"></div>
+    </div>
+
+    <!-- NAVIGATION HUD -->
+    <nav class="hud-nav">
+        <div class="nav-logo">
+            <div class="logo-icon">
+                <div class="logo-orbit"></div>
+                <div class="logo-planet"></div>
+            </div>
+            <span class="logo-text">CSS <em>Universe</em></span>
+        </div>
+
+        <div class="nav-controls">
+            <!-- Star Mode Toggle -->
+            <label for="star-mode" class="star-toggle" data-tooltip="Modo Estrela">
+                <span class="star-icon">✦</span>
+                <div class="toggle-track">
+                    <div class="toggle-orb"></div>
+                </div>
+                <span class="toggle-label">Modo Estrela</span>
+            </label>
+
+            <!-- Planet Focus Buttons -->
+            <div class="planet-nav">
+                <span class="nav-divider"></span>
+                <label for="focus-none" class="planet-btn system-btn" data-tooltip="Visão Geral">Sistema</label>
+                <label for="focus-mercury" class="planet-btn mercury-btn" data-tooltip="Mercúrio">☿</label>
+                <label for="focus-venus" class="planet-btn venus-btn" data-tooltip="Vênus">♀</label>
+                <label for="focus-earth" class="planet-btn earth-btn" data-tooltip="Terra">⊕</label>
+                <label for="focus-mars" class="planet-btn mars-btn" data-tooltip="Marte">♂</label>
+                <label for="focus-jupiter" class="planet-btn jupiter-btn" data-tooltip="Júpiter">♃</label>
+                <label for="focus-saturn" class="planet-btn saturn-btn" data-tooltip="Saturno">♄</label>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PLANET INFO PANEL -->
+    <aside class="planet-panel">
+        <div class="panel-cards">
+
+            <div class="panel-card panel-system">
+                <div class="panel-badge">Sistema Solar</div>
+                <h2 class="panel-title">Nossa Estrela e Seus Mundos</h2>
+                <p class="panel-desc">Um sistema estelar a 26.000 anos-luz do centro da Via Láctea. Selecione um planeta para explorar.</p>
+                <div class="panel-stats">
+                    <div class="pstat"><span class="pstat-val">8</span><span class="pstat-key">Planetas</span></div>
+                    <div class="pstat"><span class="pstat-val">4,6B</span><span class="pstat-key">Anos</span></div>
+                    <div class="pstat"><span class="pstat-val">1</span><span class="pstat-key">Estrela</span></div>
+                </div>
+                <div class="panel-tags">
+                    <span class="tag">CSS 3D Transforms</span>
+                    <span class="tag">preserve-3d</span>
+                    <span class="tag">Pure CSS</span>
+                </div>
+                <p class="panel-hint">↑ Clique num planeta para saber mais</p>
+            </div>
+
+            <div class="panel-card panel-mercury">
+                <div class="panel-badge" style="--badge-clr:#a8a8a8">Mercúrio</div>
+                <div class="panel-planet-preview mercury-preview"></div>
+                <h2 class="panel-title">O Mundo Veloz</h2>
+                <p class="panel-desc">Menor planeta, mais próximo do Sol. Superfície cratérica, sem atmosfera para amortecer impactos.</p>
+                <div class="panel-stats">
+                    <div class="pstat"><span class="pstat-val">88d</span><span class="pstat-key">Órbita</span></div>
+                    <div class="pstat"><span class="pstat-val">167°C</span><span class="pstat-key">Média</span></div>
+                    <div class="pstat"><span class="pstat-val">4.879</span><span class="pstat-key">km Ø</span></div>
+                </div>
+            </div>
+
+            <div class="panel-card panel-venus">
+                <div class="panel-badge" style="--badge-clr:#e3bb76">Vênus</div>
+                <div class="panel-planet-preview venus-preview"></div>
+                <h2 class="panel-title">O Gêmeo Infernal</h2>
+                <p class="panel-desc">Similar à Terra em tamanho, mas com atmosfera densa de CO₂ que cria o efeito estufa mais extremo.</p>
+                <div class="panel-stats">
+                    <div class="pstat"><span class="pstat-val">225d</span><span class="pstat-key">Órbita</span></div>
+                    <div class="pstat"><span class="pstat-val">464°C</span><span class="pstat-key">Média</span></div>
+                    <div class="pstat"><span class="pstat-val">12.104</span><span class="pstat-key">km Ø</span></div>
+                </div>
+            </div>
+
+            <div class="panel-card panel-earth">
+                <div class="panel-badge" style="--badge-clr:#3b82f6">Terra</div>
+                <div class="panel-planet-preview earth-preview"></div>
+                <h2 class="panel-title">O Pálido Ponto Azul</h2>
+                <p class="panel-desc">Único mundo conhecido a abrigar vida. Oceanos cobrem 71% da superfície.</p>
+                <div class="panel-stats">
+                    <div class="pstat"><span class="pstat-val">365d</span><span class="pstat-key">Órbita</span></div>
+                    <div class="pstat"><span class="pstat-val">15°C</span><span class="pstat-key">Média</span></div>
+                    <div class="pstat"><span class="pstat-val">12.742</span><span class="pstat-key">km Ø</span></div>
+                </div>
+            </div>
+
+            <div class="panel-card panel-mars">
+                <div class="panel-badge" style="--badge-clr:#e25822">Marte</div>
+                <div class="panel-planet-preview mars-preview"></div>
+                <h2 class="panel-title">O Planeta Vermelho</h2>
+                <p class="panel-desc">Lar do Olympus Mons, maior vulcão do sistema solar. Calotas polares de gelo seco.</p>
+                <div class="panel-stats">
+                    <div class="pstat"><span class="pstat-val">687d</span><span class="pstat-key">Órbita</span></div>
+                    <div class="pstat"><span class="pstat-val">-65°C</span><span class="pstat-key">Média</span></div>
+                    <div class="pstat"><span class="pstat-val">6.779</span><span class="pstat-key">km Ø</span></div>
+                </div>
+            </div>
+
+            <div class="panel-card panel-jupiter">
+                <div class="panel-badge" style="--badge-clr:#c88b3a">Júpiter</div>
+                <div class="panel-planet-preview jupiter-preview"></div>
+                <h2 class="panel-title">O Gigante Dominante</h2>
+                <p class="panel-desc">Maior planeta do sistema solar. A Grande Mancha Vermelha é uma tempestade de 350 anos.</p>
+                <div class="panel-stats">
+                    <div class="pstat"><span class="pstat-val">12a</span><span class="pstat-key">Órbita</span></div>
+                    <div class="pstat"><span class="pstat-val">-110°C</span><span class="pstat-key">Média</span></div>
+                    <div class="pstat"><span class="pstat-val">142.984</span><span class="pstat-key">km Ø</span></div>
+                </div>
+            </div>
+
+            <div class="panel-card panel-saturn">
+                <div class="panel-badge" style="--badge-clr:#d4a96a">Saturno</div>
+                <div class="panel-planet-preview saturn-preview"></div>
+                <h2 class="panel-title">O Senhor dos Anéis</h2>
+                <p class="panel-desc">Anéis de gelo e rocha que se estendem 282.000 km. Tão leve que flutuaria na água.</p>
+                <div class="panel-stats">
+                    <div class="pstat"><span class="pstat-val">29a</span><span class="pstat-key">Órbita</span></div>
+                    <div class="pstat"><span class="pstat-val">-140°C</span><span class="pstat-key">Média</span></div>
+                    <div class="pstat"><span class="pstat-val">120.536</span><span class="pstat-key">km Ø</span></div>
+                </div>
+            </div>
+
+        </div>
+    </aside>
+
+    <!-- MAIN SOLAR SYSTEM STAGE -->
+    <main class="solar-stage">
+        <div class="solar-system-wrap">
+            <div class="solar-system">
+
+                <!-- Sun -->
+                <div class="sun">
+                    <div class="sun-glow outer-glow"></div>
+                    <div class="sun-glow mid-glow"></div>
+                    <div class="sun-corona"></div>
+                    <div class="sun-corona sun-corona-2"></div>
+                    <div class="sun-body">
+                        <div class="sun-surface"></div>
+                        <div class="sun-spot sp1"></div>
+                        <div class="sun-spot sp2"></div>
+                    </div>
+                    <div class="sun-flare sf1"></div>
+                    <div class="sun-flare sf2"></div>
+                    <div class="sun-flare sf3"></div>
+                    <div class="sun-flare sf4"></div>
+                </div>
+
+                <!-- Mercury -->
+                <label for="focus-mercury" class="orbit mercury-orbit">
+                    <div class="planet mercury">
+                        <div class="planet-surface"></div>
+                        <div class="planet-shadow"></div>
+                        <div class="planet-label">Mercúrio</div>
+                    </div>
+                </label>
+
+                <!-- Venus -->
+                <label for="focus-venus" class="orbit venus-orbit">
+                    <div class="planet venus">
+                        <div class="planet-atmosphere"></div>
+                        <div class="planet-surface"></div>
+                        <div class="planet-shadow"></div>
+                        <div class="planet-label">Vênus</div>
+                    </div>
+                </label>
+
+                <!-- Earth + Moon -->
+                <label for="focus-earth" class="orbit earth-orbit">
+                    <div class="planet earth">
+                        <div class="planet-atmosphere earth-atmo"></div>
+                        <div class="planet-surface"></div>
+                        <div class="earth-clouds"></div>
+                        <div class="planet-shadow"></div>
+                        <div class="orbit moon-orbit">
+                            <div class="moon">
+                                <div class="moon-surface"></div>
+                                <div class="planet-shadow"></div>
+                            </div>
+                        </div>
+                        <div class="planet-label">Terra</div>
+                    </div>
+                </label>
+
+                <!-- Mars -->
+                <label for="focus-mars" class="orbit mars-orbit">
+                    <div class="planet mars">
+                        <div class="planet-surface"></div>
+                        <div class="mars-polar-cap"></div>
+                        <div class="planet-shadow"></div>
+                        <div class="planet-label">Marte</div>
+                    </div>
+                </label>
+
+                <!-- Asteroid Belt -->
+                <div class="asteroid-belt"></div>
+
+                <!-- Jupiter -->
+                <label for="focus-jupiter" class="orbit jupiter-orbit">
+                    <div class="planet jupiter">
+                        <div class="planet-surface"></div>
+                        <div class="jupiter-bands"></div>
+                        <div class="jupiter-storm"></div>
+                        <div class="planet-shadow"></div>
+                        <div class="planet-label">Júpiter</div>
+                    </div>
+                </label>
+
+                <!-- Saturn + Rings -->
+                <label for="focus-saturn" class="orbit saturn-orbit">
+                    <div class="planet saturn">
+                        <div class="saturn-rings">
+                            <div class="ring ring-c"></div>
+                            <div class="ring ring-b"></div>
+                            <div class="ring ring-a"></div>
+                        </div>
+                        <div class="planet-surface"></div>
+                        <div class="saturn-bands"></div>
+                        <div class="planet-shadow"></div>
+                        <div class="planet-label">Saturno</div>
+                    </div>
+                </label>
+
+                <!-- Uranus -->
+                <div class="orbit uranus-orbit">
+                    <div class="planet uranus">
+                        <div class="planet-surface"></div>
+                        <div class="uranus-ring"></div>
+                        <div class="planet-shadow"></div>
+                        <div class="planet-label">Urano</div>
+                    </div>
+                </div>
+
+                <!-- Neptune -->
+                <div class="orbit neptune-orbit">
+                    <div class="planet neptune">
+                        <div class="planet-atmosphere"></div>
+                        <div class="planet-surface"></div>
+                        <div class="planet-shadow"></div>
+                        <div class="planet-label">Netuno</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Speed HUD -->
+        <div class="speed-hud">
+            <span class="hud-label">Velocidade Orbital</span>
+            <div class="speed-btns">
+                <label for="speed-slow" class="speed-btn">½×</label>
+                <label for="speed-normal" class="speed-btn">1×</label>
+                <label for="speed-fast" class="speed-btn">3×</label>
+            </div>
+        </div>
+
+        <!-- Bottom HUD Bar -->
+        <div class="bottom-bar">
+            <div class="bar-item">
+                <span class="bar-label">CSS 3D Universe</span>
+                <span class="bar-val">v3.0</span>
+            </div>
+            <div class="bar-sep"></div>
+            <div class="bar-item">
+                <span class="bar-label">Planetas</span>
+                <span class="bar-val">8</span>
+            </div>
+            <div class="bar-sep"></div>
+            <div class="bar-item">
+                <span class="bar-label">JavaScript p/ efeitos</span>
+                <span class="bar-val">0%</span>
+            </div>
+        </div>
+    </main>
+
+    <script src="animations.js"></script>
+</body>
+</html>
