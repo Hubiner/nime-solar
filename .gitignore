@@ -477,3 +477,6 @@ docker-volumes/
 *.tgz
 
 **/.claude/settings.local.json
+
+.dev.vars*
+!.dev.vars.example
