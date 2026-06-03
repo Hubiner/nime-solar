@@ -1,8 +1,3 @@
-/**
- * Solar System — JS Animation Layer
- * Adds: mouse parallax, canvas shooting stars, solar wind particles,
- * ambient cursor glow, panel stat reveal, keyboard navigation.
- */
 (function () {
     'use strict';
 
@@ -51,8 +46,6 @@
     window.addEventListener('resize', resize);
 
     // ── 3. PARALLAX ──────────────────────────────────────────────────────────
-    // Each layer moves at a different speed to create depth.
-    // Strength (s) is max px offset when mouse is at edge.
     const bgLayers = [
         { el: document.querySelector('.void-bg'),       s: 2  },
         { el: document.querySelector('.nebula-layer'),  s: 6  },
@@ -65,11 +58,6 @@
     let ptx = 0, pty = 0;  // parallax target (normalized -0.5 → 0.5)
     let pcx = 0, pcy = 0;  // parallax current (lerped)
 
-    document.addEventListener('mousemove', e => {
-        ptx = e.clientX / W - 0.5;
-        pty = e.clientY / H - 0.5;
-    });
-
     // ── 4. CURSOR GLOW ───────────────────────────────────────────────────────
     const cursorGlow = document.createElement('div');
     cursorGlow.className = 'cursor-glow';
@@ -78,7 +66,12 @@
     let cgTargetX = -200, cgTargetY = -200;
     let cgCurX    = -200, cgCurY    = -200;
 
-    document.addEventListener('mousemove', e => { cgTargetX = e.clientX; cgTargetY = e.clientY; });
+    document.addEventListener('mousemove', e => {
+        ptx = e.clientX / W - 0.5;
+        pty = e.clientY / H - 0.5;
+        cgTargetX = e.clientX;
+        cgTargetY = e.clientY;
+    });
 
     // ── 5. CANVAS SHOOTING STARS ─────────────────────────────────────────────
     const sStar = [];
