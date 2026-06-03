@@ -34,22 +34,131 @@
         }
     </style>`);
 
-    // ── 2. CANVAS OVERLAY (z-index 4: above stars, below solar system) ───────
+    // ── 2. CANVAS LAYERS ─────────────────────────────────────────────────────
+    // fx: foreground effects — shooting stars, solar wind (z-index 4)
     const canvas = document.createElement('canvas');
     canvas.style.cssText = 'position:fixed;inset:0;z-index:4;pointer-events:none;';
     document.body.appendChild(canvas);
     const ctx = canvas.getContext('2d');
 
+    // bg: procedural starfield behind the solar system (z-index 2)
+    const bgCanvas = document.createElement('canvas');
+    bgCanvas.style.cssText = 'position:fixed;inset:0;z-index:2;pointer-events:none;';
+    document.body.appendChild(bgCanvas);
+    const bgCtx = bgCanvas.getContext('2d');
+
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
     let W = innerWidth, H = innerHeight;
-    const resize = () => { W = canvas.width = innerWidth; H = canvas.height = innerHeight; };
+    function resize() {
+        W = innerWidth; H = innerHeight;
+        canvas.width = W; canvas.height = H;
+        bgCanvas.width = W * dpr; bgCanvas.height = H * dpr;
+        bgCanvas.style.width = W + 'px'; bgCanvas.style.height = H + 'px';
+        bgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);  // draw in CSS px, render at device resolution
+    }
     resize();
     window.addEventListener('resize', resize);
+
+    // ── 2b. PROCEDURAL STARFIELD ──────────────────────────────────────────────
+    // Soft colored star sprites are pre-rendered once, then blitted per frame —
+    // far cheaper than a radial-gradient per star, so hundreds stay smooth.
+    const STAR_COLORS = [
+        [255, 255, 255], [255, 255, 255],   // white (most common)
+        [202, 218, 255], [180, 205, 255],   // blue-white
+        [255, 232, 205], [255, 208, 165],   // warm
+    ];
+
+    function makeStarSprite([r, g, b]) {
+        const c = document.createElement('canvas');
+        const S = 64; c.width = c.height = S;
+        const x = c.getContext('2d');
+        const grd = x.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
+        grd.addColorStop(0,    `rgba(${r},${g},${b},1)`);
+        grd.addColorStop(0.18, `rgba(${r},${g},${b},0.55)`);
+        grd.addColorStop(1,    `rgba(${r},${g},${b},0)`);
+        x.fillStyle = grd;
+        x.beginPath(); x.arc(S / 2, S / 2, S / 2, 0, Math.PI * 2); x.fill();
+        return c;
+    }
+    const sprites = STAR_COLORS.map(makeStarSprite);
+
+    // Cross-shaped diffraction flare — only the brightest stars wear it
+    const spikeSprite = (() => {
+        const c = document.createElement('canvas');
+        const S = 128; c.width = c.height = S; const m = S / 2;
+        const x = c.getContext('2d');
+        for (const vertical of [false, true]) {
+            const grd = vertical
+                ? x.createLinearGradient(m, 0, m, S)
+                : x.createLinearGradient(0, m, S, m);
+            grd.addColorStop(0,   'rgba(255,255,255,0)');
+            grd.addColorStop(0.5, 'rgba(255,255,255,0.9)');
+            grd.addColorStop(1,   'rgba(255,255,255,0)');
+            x.fillStyle = grd;
+            if (vertical) x.fillRect(m - 1.5, 0, 3, S);
+            else          x.fillRect(0, m - 1.5, S, 3);
+        }
+        return c;
+    })();
+
+    const stars = [];
+    function makeStar(extra) {
+        const z = Math.random();  // depth: 0 far → 1 near (drives size + parallax)
+        return {
+            x: Math.random(), y: Math.random(), z,
+            r: (0.45 + z * 1.25) * (0.7 + Math.random() * 0.7),
+            si: (Math.random() * sprites.length) | 0,
+            base: 0.4 + Math.random() * 0.5,
+            tw: Math.random() * Math.PI * 2,
+            tws: 0.5 + Math.random() * 1.8,
+            twAmp: reduceMotion ? 0.08 : 0.3 + Math.random() * 0.35,
+            spike: Math.random() < 0.05,
+            extra,
+        };
+    }
+    for (let i = 0; i < 280; i++) stars.push(makeStar(false));  // always visible
+    for (let i = 0; i < 360; i++) stars.push(makeStar(true));   // fade in with Star Mode
+
+    // Star-mode boost — a 0→1 value lerped each frame for a fluid transition
+    const starModeInput = document.getElementById('star-mode');
+    let boostTarget = starModeInput && starModeInput.checked ? 1 : 0;
+    let boost = boostTarget;
+    if (starModeInput)
+        starModeInput.addEventListener('change', () => { boostTarget = starModeInput.checked ? 1 : 0; });
+
+    function drawStarfield(now) {
+        bgCtx.clearRect(0, 0, W, H);
+        const t = now * 0.001;
+        for (const s of stars) {
+            const present = s.extra ? boost : 1;
+            if (present < 0.02) continue;
+            const twinkle = (1 - s.twAmp) + s.twAmp * (0.5 + 0.5 * Math.sin(t * s.tws + s.tw));
+            let a = s.base * twinkle * present * (0.7 + boost * 0.55);
+            if (a < 0.02) continue;
+            if (a > 1) a = 1;
+
+            const depth = 6 + s.z * 30;                 // nearer stars parallax more
+            const x = s.x * W + pcx * depth;
+            const y = s.y * H + pcy * depth;
+            const d = s.r * 5.5 * (1 + boost * 0.45);
+
+            bgCtx.globalAlpha = a;
+            bgCtx.drawImage(sprites[s.si], x - d / 2, y - d / 2, d, d);
+            if (s.spike) {
+                const sd = d * (2.6 + boost * 2.4);
+                bgCtx.globalAlpha = a * (0.35 + boost * 0.6);
+                bgCtx.drawImage(spikeSprite, x - sd / 2, y - sd / 2, sd, sd);
+            }
+        }
+        bgCtx.globalAlpha = 1;
+    }
 
     // ── 3. PARALLAX ──────────────────────────────────────────────────────────
     const bgLayers = [
         { el: document.querySelector('.void-bg'),       s: 2  },
         { el: document.querySelector('.nebula-layer'),  s: 6  },
-        { el: document.querySelector('.stars-bg'),      s: 4  },
         { el: document.querySelector('.stars-layer-1'), s: 12 },
         { el: document.querySelector('.stars-layer-2'), s: 20 },
         { el: document.querySelector('.star-glows'),    s: 28 },
@@ -94,7 +203,8 @@
     // Staggered initial spawns, then random recurring schedule
     [700, 3300, 6600].forEach(d => setTimeout(() => sStar.push(newStar()), d));
     (function scheduleStar() {
-        setTimeout(() => { sStar.push(newStar()); scheduleStar(); }, 2000 + Math.random() * 9000);
+        const delay = (2000 + Math.random() * 9000) * (1 - boost * 0.55);  // more frequent in Star Mode
+        setTimeout(() => { sStar.push(newStar()); scheduleStar(); }, delay);
     })();
 
     // ── 6. SOLAR WIND PARTICLES ───────────────────────────────────────────────
@@ -174,15 +284,22 @@
     });
 
     // ── 10. MAIN ANIMATION LOOP ───────────────────────────────────────────────
-    function loop() {
+    function loop(now) {
+        now = now || performance.now();
         requestAnimationFrame(loop);
         ctx.clearRect(0, 0, W, H);
+
+        // Star-mode boost — fluid ramp toward target
+        boost += (boostTarget - boost) * 0.045;
 
         // Parallax — smooth lerp toward mouse target
         pcx += (ptx - pcx) * 0.05;
         pcy += (pty - pcy) * 0.05;
         for (const { el, s } of bgLayers)
             el.style.transform = `translate(${pcx * s}px, ${pcy * s}px)`;
+
+        // Procedural starfield — depth parallax + realistic twinkle
+        drawStarfield(now);
 
         // Cursor glow — faster lerp for responsive feel
         cgCurX += (cgTargetX - cgCurX) * 0.12;

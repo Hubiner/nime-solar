@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+/* Fonts are loaded via <link> in index.html (avoids a render-blocking @import). */
 
 /* =========================================================
    ROOT & CUSTOM PROPERTIES
@@ -102,48 +102,29 @@ html, body {
     100% { opacity: 0.5; }
 }
 
-/* =========================================================
-   STARFIELD — Dense multi-layer star system
-========================================================= */
+/* Aurora — colored deep-space glow that fades in with Star Mode */
+.aurora-layer {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    opacity: 0;
+    background:
+        radial-gradient(ellipse 95% 70% at 0%   100%, rgba(0,255,157,0.10)  0%, transparent 55%),
+        radial-gradient(ellipse 95% 70% at 100% 0%,   rgba(150,80,255,0.13) 0%, transparent 55%),
+        radial-gradient(ellipse 75% 55% at 50%  108%, rgba(60,170,255,0.07) 0%, transparent 60%);
+    transition: opacity 1.4s var(--ease-fluid);
+    animation: auroraDrift 26s ease-in-out infinite alternate;
+    will-change: transform, opacity;
+}
+body:has(#star-mode:checked) .aurora-layer { opacity: 1; }
+@keyframes auroraDrift {
+    from { transform: translate3d(-1.5%, 0.5%, 0) scale(1.05); }
+    to   { transform: translate3d(1.5%, -1%, 0)  scale(1.12); }
+}
 
-/* Layer 0: Dense stardust texture — provides hundreds of tiny stars */
-.stars-bg {
-    position: fixed; inset: 0; z-index: 2;
-    background: transparent;
-    overflow: hidden;
-    transition: opacity 1.2s var(--ease-fluid);
-    opacity: 0.8;
-}
-.stars-bg::before {
-    content: '';
-    position: absolute;
-    top: -500px; left: -1000px;
-    width: calc(100vw + 2000px);
-    height: calc(100vh + 1000px);
-    background: url('https://www.transparenttextures.com/patterns/stardust.png');
-    animation: starDrift 120s linear infinite;
-    will-change: transform;
-}
-@keyframes starDrift {
-    from { transform: translate(0, 0); }
-    to   { transform: translate(1000px, 500px); }
-}
-/* Layer 0b: second texture layer offset for extra density */
-.stars-bg::after {
-    content: '';
-    position: absolute;
-    top: -300px; left: -600px;
-    width: calc(100vw + 1200px);
-    height: calc(100vh + 600px);
-    background: url('https://www.transparenttextures.com/patterns/stardust.png');
-    animation: starDrift2 180s linear infinite;
-    will-change: transform;
-    opacity: 0.6;
-}
-@keyframes starDrift2 {
-    from { transform: translate(0, 0) rotate(0.5deg); }
-    to   { transform: translate(-800px, 300px) rotate(0.5deg); }
-}
+/* =========================================================
+   STARFIELD — CSS dot layers
+   (a dense procedural canvas starfield is rendered on top
+    via animations.js — see the PROCEDURAL STARFIELD section)
+========================================================= */
 
 /* Layer 1: CSS star dots — small dense field */
 .stars-layer-1 {
@@ -341,34 +322,14 @@ html, body {
     100% { opacity: 0; }
 }
 
-/* Star Mode — cranks up all background layers */
-body:has(#star-mode:checked) .stars-bg         { opacity: 1; }
-body:has(#star-mode:checked) .stars-layer-1    { opacity: 1; }
-body:has(#star-mode:checked) .stars-layer-2    { opacity: 1; }
-body:has(#star-mode:checked) .star-glows       { opacity: 1; }
-body:has(#star-mode:checked) .nebula-layer     { opacity: 1; animation-duration: 15s; }
-body:has(#star-mode:checked) .void-bg {
-    background:
-        radial-gradient(ellipse 100% 100% at -10% -10%, rgba(0, 255, 157, 0.25) 0%, transparent 60%),
-        radial-gradient(ellipse 100% 100% at 110% 110%, rgba(255, 0, 255, 0.25) 0%, transparent 60%),
-        #020208;
-}
+/* Star Mode — cranks up all background layers (the colored glow comes
+   from .aurora-layer, which fades in smoothly via opacity) */
+body:has(#star-mode:checked) .stars-layer-1   { opacity: 1; }
+body:has(#star-mode:checked) .stars-layer-2   { opacity: 1; }
+body:has(#star-mode:checked) .star-glows      { opacity: 1; }
+body:has(#star-mode:checked) .nebula-layer    { opacity: 1; animation-duration: 15s; }
 body:has(#star-mode:checked) .void-bg::before { opacity: 1.8; }
-body:has(#star-mode:checked) .void-bg::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 255, 157, 0.04) 0px,
-        rgba(0, 255, 157, 0.04) 1px,
-        transparent 1px,
-        transparent 3px
-    );
-    pointer-events: none;
-    z-index: 1;
-}
-body:has(#star-mode:checked) .shooting-star { animation-duration: 8s !important; }
+body:has(#star-mode:checked) .shooting-star   { animation-duration: 8s !important; }
 
 /* =========================================================
    HUD NAVIGATION
@@ -1081,4 +1042,17 @@ body:has(#speed-fast:checked)   label[for="speed-fast"]   { background: rgba(124
     .planet-panel { display: none; }
     .toggle-label { display: none; }
     .nav-controls  { gap: 0.7rem; }
+}
+
+/* =========================================================
+   REDUCED MOTION — calm the ambient effects, keep the orbits
+========================================================= */
+@media (prefers-reduced-motion: reduce) {
+    .aurora-layer, .nebula-layer,
+    .stars-layer-1::before, .stars-layer-1::after,
+    .stars-layer-2::before, .stars-layer-2::after,
+    .star-glows::before, .dust-particle, .shooting-star,
+    .panel-hint, .panel-planet-preview {
+        animation: none !important;
+    }
 }
