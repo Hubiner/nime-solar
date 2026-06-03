@@ -1,0 +1,2 @@
+# Redireciona qualquer rota desconhecida para a home (SPA fallback)
+/*    /index.html   200
