@@ -106,20 +106,22 @@
     const stars = [];
     function makeStar(extra) {
         const z = Math.random();  // depth: 0 far → 1 near (drives size + parallax)
+        // Extra stars (Star Mode) skew smaller & fainter → a dense Milky-Way sprinkle
+        const sizeMul = extra ? 0.4 + Math.random() * 0.55 : 0.7 + Math.random() * 0.7;
         return {
             x: Math.random(), y: Math.random(), z,
-            r: (0.45 + z * 1.25) * (0.7 + Math.random() * 0.7),
+            r: (0.45 + z * 1.25) * sizeMul,
             si: (Math.random() * sprites.length) | 0,
-            base: 0.4 + Math.random() * 0.5,
+            base: extra ? 0.3 + Math.random() * 0.45 : 0.4 + Math.random() * 0.5,
             tw: Math.random() * Math.PI * 2,
             tws: 0.5 + Math.random() * 1.8,
             twAmp: reduceMotion ? 0.08 : 0.3 + Math.random() * 0.35,
-            spike: Math.random() < 0.05,
+            spike: Math.random() < (extra ? 0.02 : 0.05),
             extra,
         };
     }
-    for (let i = 0; i < 280; i++) stars.push(makeStar(false));  // always visible
-    for (let i = 0; i < 360; i++) stars.push(makeStar(true));   // fade in with Star Mode
+    for (let i = 0; i < 300; i++)  stars.push(makeStar(false));  // always visible
+    for (let i = 0; i < 1100; i++) stars.push(makeStar(true));   // dense field for Star Mode
 
     // Star-mode boost — a 0→1 value lerped each frame for a fluid transition
     const starModeInput = document.getElementById('star-mode');
@@ -135,7 +137,7 @@
             const present = s.extra ? boost : 1;
             if (present < 0.02) continue;
             const twinkle = (1 - s.twAmp) + s.twAmp * (0.5 + 0.5 * Math.sin(t * s.tws + s.tw));
-            let a = s.base * twinkle * present * (0.7 + boost * 0.55);
+            let a = s.base * twinkle * present * (0.7 + boost * 0.7);
             if (a < 0.02) continue;
             if (a > 1) a = 1;
 
